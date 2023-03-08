@@ -1,0 +1,34 @@
+* {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+a {
+  text-decoration: none;
+  outline: none;
+  color: inherit;
+}
+
+a:s :root {
+  --animate-delay: 0s;
+  --animate-duration: 0.4s;
+}
+
+ul {
+  list-style-type: none;
+}
+body {
+  font-family: 'Alimama_ShuHeiTi_Bold', 'Microsoft Yahei';
+  color: #333;
+  /* background-color: #686de0; */
+  letter-spacing: 0.2px;
+}
+
+/* element-plus */
+.is-focus {
+  box-shadow: 0 0 0 1px #686de0 inset !important;
+}
+.el-menu {
+  border-bottom: 0px !important;
+}

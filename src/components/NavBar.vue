@@ -83,13 +83,17 @@ watch(screenWidth, val => {
     </Teleport>
 
     <!-- module1 -->
-    <el-menu-item index="1" style="font-size: 16.6px">首页</el-menu-item>
+    <el-menu-item index="1" style="font-size: 16.6px"
+      ><router-link to="/">首页</router-link></el-menu-item
+    >
     <div class="flex-grow" />
 
     <!-- module2 -->
     <el-sub-menu index="2" class="hidden-xs-only">
       <template #title>法律法规</template>
-      <el-menu-item index="2-1">item one</el-menu-item>
+      <el-menu-item index="2-1"
+        ><router-link to="/ArticleList">item one</router-link></el-menu-item
+      >
       <el-menu-item index="2-2">item two</el-menu-item>
       <el-menu-item index="2-3">item three</el-menu-item>
     </el-sub-menu>
