@@ -1,7 +1,19 @@
-<script setup></script>
+<script setup>
+import Text from '../components/Text.vue';
+</script>
 
 <template>
-  <h1>hello world</h1>
+  <div class="container-article">
+    <Text />
+  </div>
 </template>
 
-<style></style>
+<style scoped>
+.container-article {
+  max-width: 940px;
+  min-width: 350px;
+  margin: 0 auto;
+  box-shadow: 0 0 10px #aaa;
+  background-color: #fff;
+}
+</style>
