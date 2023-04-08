@@ -1,5 +1,6 @@
 <script setup>
 import LoginCard from '../components/LoginCard.vue';
+document.title = '管理员登录';
 </script>
 
 <template>

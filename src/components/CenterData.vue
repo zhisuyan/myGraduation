@@ -21,6 +21,7 @@ const formLabelWidth = '140px';
 const chargeNum = ref(1);
 let chargeList = reactive([]);
 let orderData = reactive([]);
+document.title = `Hello!${username.value} 个人中心~`;
 
 // 修改密码表单部分
 let form = reactive({
@@ -133,7 +134,7 @@ function changePwd(Id, oldPwd, newPwd) {
         (id.value = ''),
           (username.value = ''),
           (email.value = ''),
-          (points = 0);
+          (points.value = 0);
       } else if (response.data.status === 401) {
         tokenTimeOut();
       } else if (response.data.status === 403) {
@@ -160,7 +161,7 @@ function deleteSelf(id) {
         (id.value = ''),
           (username.value = ''),
           (email.value = ''),
-          (points = 0);
+          (points.value = 0);
       } else if (response.data.status === 401) {
         tokenTimeOut();
       } else if (response.data.status === 1) {

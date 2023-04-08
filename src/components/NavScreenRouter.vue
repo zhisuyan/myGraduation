@@ -1,8 +1,15 @@
 <script setup>
 import { ref } from 'vue';
+import { useUserStore } from '../stores/user';
+import { storeToRefs } from 'pinia';
+
+const userStore = useUserStore();
+const { open } = storeToRefs(userStore);
+
 const Module1 = ref(false);
 const Module2 = ref(false);
 const Module3 = ref(false);
+const Module4 = ref(false);
 </script>
 
 <template>
@@ -17,53 +24,61 @@ const Module3 = ref(false);
         "></p>
     </div>
     <div class="items" v-show="Module1">
-      <div class="item">网络管理1</div>
-      <div class="item">网络管理2</div>
-      <div class="item">网络管理3</div>
+      <router-link to="/ArticleList/law/10/1" @click="open = false">
+        <div class="item">GDPR-通用数据保护条例</div>
+      </router-link>
+      <router-link to="/ArticleList/law/10/2" @click="open = false"
+        ><div class="item">网络安全与数据安全</div></router-link
+      >
+
+      <router-link to="/ArticleList/law/10/3" @click="open = false"
+        ><div class="item">信息安全管理</div></router-link
+      >
     </div>
   </div>
 
   <!-- Module2 -->
   <div class="module" @click="Module2 = !Module2">
     <div class="main">
-      软件相关
+      <router-link to="/ArticleList/software/10/0" @click="open = false"
+        >软件相关</router-link
+      >
       <div class="flex-grow" />
-      <p
-        :class="
-          Module2 == false ? 'iconfont icon-plus' : 'iconfont icon-sub'
-        "></p>
-    </div>
-    <div class="items" v-show="Module2">
-      <div class="item">网络管理1</div>
-      <div class="item">网络管理2</div>
-      <div class="item">网络管理3</div>
     </div>
   </div>
 
   <!-- Module3 -->
   <div class="module" @click="Module3 = !Module3">
     <div class="main">
-      硬件相关
+      <router-link to="/ArticleList/hardware/10/0" @click="open = false"
+        >硬件相关</router-link
+      >
       <div class="flex-grow" />
-      <p
-        :class="
-          Module3 == false ? 'iconfont icon-plus' : 'iconfont icon-sub'
-        "></p>
-    </div>
-    <div class="items" v-show="Module3">
-      <div class="item">网络管理1</div>
-      <div class="item">网络管理2</div>
-      <div class="item">网络管理3</div>
     </div>
   </div>
 
   <!-- Module4 -->
-  <div class="module">
+  <div class="module" @click="Module4 = !Module4">
     <div class="main">
-      <a href="#">
-        新手入门
-        <div class="flex-grow" />
-      </a>
+      新手指南
+      <div class="flex-grow" />
+      <p
+        :class="
+          Module4 == false ? 'iconfont icon-plus' : 'iconfont icon-sub'
+        "></p>
+    </div>
+    <div class="items" v-show="Module4">
+      <router-link to="/ArticleList/Article/58" @click="open = false"
+        ><div class="item">新手入门篇1</div></router-link
+      >
+
+      <router-link to="/ArticleList/Article/59" @click="open = false"
+        ><div class="item">新手入门篇2_软件</div></router-link
+      >
+
+      <router-link to="/ArticleList/Article/60" @click="open = false"
+        ><div class="item">新手入门篇3_硬件</div></router-link
+      >
     </div>
   </div>
 </template>

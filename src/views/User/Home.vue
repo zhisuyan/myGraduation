@@ -1,6 +1,8 @@
 <script setup>
 import ContentPage from '../../components/ContentPage.vue';
 import NewsList from '../../components/NewsList.vue';
+
+document.title = '软硬件信息安全资讯综合平台';
 </script>
 
 <template>

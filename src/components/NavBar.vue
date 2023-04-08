@@ -9,13 +9,13 @@ import { useRouter } from 'vue-router';
 
 const router = useRouter();
 const userStore = useUserStore();
-const { id, username, email, points } = storeToRefs(userStore);
+const { id, username, email, points, open } = storeToRefs(userStore);
 const activeIndex = ref('1');
 const handleSelect = (key, keyPath) => {
   console.log(key, keyPath);
 };
 // 遮罩层是否出现
-const open = ref(false);
+// const open = ref(false);
 
 // 退出登录
 function logOut() {
@@ -24,6 +24,7 @@ function logOut() {
     (username.value = ''),
     (email.value = ''),
     (points.value = 0);
+  open.value = false;
   router.replace({ path: '/' });
 }
 
@@ -101,7 +102,9 @@ watch(screenWidth, val => {
     </Teleport>
 
     <!-- module1 -->
-    <el-menu-item index="/" style="font-size: 16.6px">首页</el-menu-item>
+    <el-menu-item index="/" style="font-size: 16.6px" @click="open = false"
+      >首页</el-menu-item
+    >
     <div class="flex-grow" />
 
     <!-- module2 -->
@@ -134,7 +137,9 @@ watch(screenWidth, val => {
 
     <el-sub-menu index="6" v-if="username">
       <template #title>{{ username }}</template>
-      <el-menu-item index="/center">个人空间</el-menu-item>
+      <el-menu-item index="/center" @click="open = false"
+        >个人空间</el-menu-item
+      >
       <el-menu-item index="" class="logout" @click="logOut"
         >退出登录</el-menu-item
       >

@@ -1,6 +1,8 @@
 <script setup>
 import VerticalMenu from '../../components/VerticalMenu.vue';
 import HorizonMenu from '../../components/HorizonMenu.vue';
+
+document.title = '后台管理系统';
 </script>
 
 <template>

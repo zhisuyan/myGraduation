@@ -69,14 +69,15 @@ function getArticleData() {
       time.value = response.data.time;
       address.value = response.data.address;
       downloadURL.value = `http://127.0.0.1:3000/word/${address.value}`;
+      document.title = title.value;
     })
     .catch(error => {
       console.log(error);
     });
 }
 
-function buyArticle() {
-  return request
+async function buyArticle() {
+  await request
     .post(`/userCtrl/buyArticle/${id.value}/${title.value}`)
     .then(response => {
       api = response.data;
@@ -94,7 +95,8 @@ function buyArticle() {
           (points.value = 0);
         router.go(0);
       } else if (api.status === 1) {
-        errMsg('购买失败,请稍后再试');
+        msg('购买失败,请稍后再试');
+        console.log(response);
       }
     })
     .catch(error => {

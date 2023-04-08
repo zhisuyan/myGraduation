@@ -6,6 +6,7 @@ export const useUserStore = defineStore('user', {
     username: '',
     email: '',
     points: 0,
+    open: false,
   }),
   persist: true,
 });

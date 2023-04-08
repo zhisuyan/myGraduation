@@ -4,38 +4,55 @@
   <div class="footer">
     <dl class="itemList">
       <dt class="item">法律法规</dt>
-      <dd class="item"><a href="#">xxxxx</a></dd>
-      <dd class="item"><a href="#">xxxxx</a></dd>
-      <dd class="item"><a href="#">xxxxx</a></dd>
-      <dd class="item"><a href="#">xxxxx</a></dd>
+      <router-link to="/ArticleList/law/10/1">
+        <dd class="item">GDPR-通用数据保护条例</dd>
+      </router-link>
+      <router-link to="/ArticleList/law/10/2"
+        ><dd class="item">网络安全与数据安全</dd></router-link
+      >
+
+      <router-link to="/ArticleList/law/10/3"
+        ><dd class="item">信息安全管理</dd></router-link
+      >
     </dl>
     <dl class="itemList">
-      <dt class="item">软件相关</dt>
-      <dd class="item">xxxxx</dd>
-      <dd class="item">xxxxx</dd>
-      <dd class="item">xxxxx</dd>
-      <dd class="item">xxxxx</dd>
+      <router-link to="/ArticleList/software/10/0"
+        ><dt class="item">软件相关</dt></router-link
+      >
+      <router-link to="/ArticleList/Article/52"
+        ><dd class="item">软件信息安全你必须要知道的30个概念</dd></router-link
+      >
     </dl>
     <dl class="itemList">
-      <dt class="item">硬件相关</dt>
-      <dd class="item">xxxxx</dd>
-      <dd class="item">xxxxx</dd>
-      <dd class="item">xxxxx</dd>
-      <dd class="item">xxxxx</dd>
+      <router-link to="/ArticleList/hardware/10/0"
+        ><dt class="item">硬件相关</dt></router-link
+      >
+
+      <router-link to="/ArticleList/Article/46"
+        ><dd class="item">硬件信息安全最重要的三十个概念</dd></router-link
+      >
     </dl>
     <dl class="itemList">
-      <dt class="item">新手指引</dt>
-      <dd class="item">xxxxx</dd>
-      <dd class="item">xxxxx</dd>
-      <dd class="item">xxxxx</dd>
-      <dd class="item">xxxxx</dd>
+      <dt class="item">新手指南</dt>
+
+      <router-link to="/ArticleList/Article/58"
+        ><dd class="item">新手入门篇1</dd></router-link
+      >
+
+      <router-link to="/ArticleList/Article/59"
+        ><dd class="item">新手入门篇2_软件</dd></router-link
+      >
+
+      <router-link to="/ArticleList/Article/60"
+        ><dd class="item">新手入门篇3_硬件</dd></router-link
+      >
     </dl>
-    <dl class="itemList">
+    <!-- <dl class="itemList">
       <dt class="item">最新资讯</dt>
       <dd class="item">xxxxx</dd>
       <dd class="item">xxxxx</dd>
       <dd class="item">xxxxx</dd>
-    </dl>
+    </dl> -->
     <div class="block"></div>
   </div>
 </template>
@@ -56,6 +73,7 @@
 .item {
   line-height: 16px;
   margin-top: 10px;
+  font-size: 12px;
 }
 .item + dd {
   text-indent: 1em;
