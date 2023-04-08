@@ -1,33 +1,153 @@
-<script setup></script>
+<script setup>
+import { ref, reactive } from 'vue';
+import { createAxiosByinterceptors } from '../utils/net';
+import { useUserStore } from '../stores/user';
+import { storeToRefs } from 'pinia';
+import { ElMessage } from 'element-plus';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
+const userStore = useUserStore();
+const { id, username, email, points } = storeToRefs(userStore);
+const { Id } = defineProps(['Id']);
+const downloadURL = ref('');
+let isUser = ref(0);
+
+let html = ref('');
+let title = ref('');
+let time = ref('');
+let address = ref('');
+let api = reactive({});
+const request = createAxiosByinterceptors({});
+function msg(message = '若要复制该文本请登录!', type = 'error') {
+  ElMessage({
+    showClose: true,
+    message: message,
+    type: type,
+    duration: 1000,
+    offset: 450,
+  });
+}
+
+function testToken() {
+  return request
+    .get(`/userCtrl/testToken`)
+    .then(response => {
+      if (response.data.status === 401) {
+        (id.value = ''),
+          (username.value = ''),
+          (email.value = ''),
+          (points.value = 0);
+      }
+    })
+    .catch(error => {
+      console.log(error);
+    });
+}
+
+async function count() {
+  await testToken();
+  if (username.value === '') {
+    isUser.value = 0;
+  } else {
+    isUser.value = 1;
+  }
+  return request
+    .get(`/user/count/${Id}/${isUser.value}`)
+    .then()
+    .catch(error => {
+      console.log(error);
+    });
+}
+
+function getArticleData() {
+  return request
+    .get(`/user/articles/${Id}`)
+    .then(response => {
+      html.value = response.data.data;
+      title.value = response.data.title;
+      time.value = response.data.time;
+      address.value = response.data.address;
+      downloadURL.value = `http://127.0.0.1:3000/word/${address.value}`;
+    })
+    .catch(error => {
+      console.log(error);
+    });
+}
+
+function buyArticle() {
+  return request
+    .post(`/userCtrl/buyArticle/${id.value}/${title.value}`)
+    .then(response => {
+      api = response.data;
+      if (api.status === 0) {
+        msg('文章购买成功,正在下载...');
+        window.open(downloadURL.value, '_self');
+        points.value -= 10;
+      } else if (api.status === 101) {
+        window.open(downloadURL.value, '_self');
+      } else if (api.status === 401) {
+        msg('登陆已过期,请重新登录');
+        (id.value = ''),
+          (username.value = ''),
+          (email.value = ''),
+          (points.value = 0);
+        router.go(0);
+      } else if (api.status === 1) {
+        errMsg('购买失败,请稍后再试');
+      }
+    })
+    .catch(error => {
+      console.log(error);
+    });
+}
+
+function checkLogin() {
+  console.log('@@');
+  console.log(username.value);
+  if (username.value == '') {
+    // 禁止右键菜单
+    document.oncontextmenu = function () {
+      return false;
+    };
+    // 禁止文字选择
+    // document.onselectstart = function () {
+    //   return false;
+    // };
+    // 禁止复制
+    document.oncopy = function () {
+      msg();
+      return false;
+    };
+    // 禁止剪切
+    document.oncut = function () {
+      msg();
+      return false;
+    };
+  }
+}
+
+function downloadFile() {
+  if (username.value == '') {
+    msg('用户请先登录');
+  } else if (points.value < 10) {
+    msg('积分余额不足');
+  } else {
+    buyArticle();
+  }
+}
+
+getArticleData();
+checkLogin();
+count();
+</script>
 
 <template>
-  <div class="detail">
-    <h2>hello world</h2>
-    <div class="art-palette">日期</div>
-    <div class="text">
-      <p>第一章 总则</p>
-      <p>
-        第一条
-        为了规范数据处理活动，保障数据安全，促进数据开发利用，保护个人、组织的合法权益，维护国家主权、安全和发展利益，制定本法。
-      </p>
-      <p>
-        第二条 在中华人民共和国境内开展数据处理活动及其安全监管，适用本法。
-        在中华人民共和国境外开展数据处理活动，损害中华人民共和国国家安全、公共利益或者公民、组织合法权益的，依法追究法律责任。
-      </p>
-      <p>
-        第三条 本法所称数据，是指任何以电子或者其他方式对信息的记录。
-        数据处理，包括数据的收集、存储、使用、加工、传输、提供、公开等。
-        数据安全，是指通过采取必要措施，确保数据处于有效保护和合法利用的状态，以及具备保障持续安全状态的能力。
-      </p>
-      <p>
-        第四条
-        维护数据安全，应当坚持总体国家安全观，建立健全数据安全治理体系，提高数据安全保障能力。
-      </p>
-      <p>
-        第五条
-        中央国家安全领导机构负责国家数据安全工作的决策和议事协调，研究制定、指导实施国家数据安全战略和有关重大方针政策，统筹协调国家数据安全的重大事项和重要工作，建立国家数据安全工作协调机制。
-      </p>
-    </div>
+  <div class="detail" id="detail">
+    <h2>{{ title }}</h2>
+    <div class="art-palette">{{ time }}</div>
+    <div class="text" v-html="html"></div>
+    <div class="download" @click="downloadFile">点此下载原文---10积分</div>
   </div>
 </template>
 
@@ -54,5 +174,12 @@ p {
 }
 .text {
   padding-top: 40px;
+  padding-bottom: 20px;
+}
+.download {
+  padding-top: 30px;
+  padding-left: 20px;
+  color: red;
+  cursor: pointer;
 }
 </style>

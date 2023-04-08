@@ -1,8 +1,8 @@
 @font-face {
   font-family: "iconfont"; /* Project id 3925333 */
-  src: url('iconfont.woff2?t=1677758411685') format('woff2'),
-       url('iconfont.woff?t=1677758411685') format('woff'),
-       url('iconfont.ttf?t=1677758411685') format('truetype');
+  src: url('iconfont.woff2?t=1680088331561') format('woff2'),
+       url('iconfont.woff?t=1680088331561') format('woff'),
+       url('iconfont.ttf?t=1680088331561') format('truetype');
 }
 
 .iconfont {
@@ -11,6 +11,18 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-lock:before {
+  content: "\e69e";
+}
+
+.icon-skull:before {
+  content: "\e94a";
+}
+
+.icon-dollar:before {
+  content: "\e688";
 }
 
 .icon-guanbi:before {

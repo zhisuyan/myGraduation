@@ -1,4 +1,42 @@
-<script setup></script>
+<script setup>
+import { ref, reactive } from 'vue';
+import { createAxiosByinterceptors } from '../utils/net';
+import dayjs from 'dayjs';
+
+const request = createAxiosByinterceptors({});
+
+let softwareData = ref('');
+let hardwareData = ref('');
+// UTC格式化
+function formatTime(time) {
+  return dayjs(time).format('YYYY-MM-DD HH:mm:ss');
+}
+function getSoftwareNews() {
+  return request
+    .get(`/user/getSoftwareNews`)
+    .then(response => {
+      softwareData.value = response.data.data;
+      console.log(softwareData);
+    })
+    .catch(error => {
+      console.log(error);
+    });
+}
+
+function getHardwareNews() {
+  return request
+    .get(`/user/getHardwareNews`)
+    .then(response => {
+      hardwareData.value = response.data.data;
+    })
+    .catch(error => {
+      console.log(error);
+    });
+}
+
+getSoftwareNews();
+getHardwareNews();
+</script>
 
 <template>
   <div class="module-title">最新资讯</div>
@@ -6,23 +44,20 @@
     <div class="card-list sorf-ware">
       <ul>
         <div class="title">
-          <span class="type">软件</span><span class="more">查看更多</span>
+          <router-link to="/ArticleList/software/10/0">
+            <span class="type">软件</span><span class="more">查看更多</span>
+          </router-link>
         </div>
-        <li>
-          <a href="#"><span>2014-4-1</span>XXXXXXXX</a>
-        </li>
-        <li>
-          <a href="#"><span>2014-5-1</span>XXXXXXXX</a>
-        </li>
-        <li>
-          <a href="#"><span>2014-6-1</span>XXXXXXXX</a>
-        </li>
-        <li>
-          <a href="#"><span>2014-7-1</span>XXXXXXXX</a>
-        </li>
-        <li>
-          <a href="#"><span>2014-7-1</span>XXXXXXXX</a>
-        </li>
+        <router-link
+          class="news-item"
+          v-for="data in softwareData"
+          :to="'/ArticleList/Article/' + data.Id"
+          :key="data.Id">
+          <li>
+            <span>{{ formatTime(data.Time) }}</span
+            >{{ data.Title }}
+          </li>
+        </router-link>
       </ul>
       <img src="../assets/img/showcase.svg" alt="showcase" class="img1" />
     </div>
@@ -31,23 +66,21 @@
       <img src="../assets/img/2.svg" alt="2" class="img2" />
       <ul>
         <div class="title">
-          <span class="type">硬件</span><span class="more">查看更多</span>
+          <router-link to="/ArticleList/hardware/10/0"
+            ><span class="type">硬件</span
+            ><span class="more">查看更多</span></router-link
+          >
         </div>
-        <li>
-          <a href="#"><span>2014-4-1</span>XXXXXXXX</a>
-        </li>
-        <li>
-          <a href="#"><span>2014-5-1</span>XXXXXXXX</a>
-        </li>
-        <li>
-          <a href="#"><span>2014-6-1</span>XXXXXXXX</a>
-        </li>
-        <li>
-          <a href="#"><span>2014-7-1</span>XXXXXXXX</a>
-        </li>
-        <li>
-          <a href="#"><span>2014-7-1</span>XXXXXXXX</a>
-        </li>
+        <router-link
+          class="news-item"
+          v-for="data in hardwareData"
+          :to="'/ArticleList/Article/' + data.Id"
+          :key="data.Id">
+          <li>
+            <span>{{ formatTime(data.Time) }}</span
+            >{{ data.Title }}
+          </li>
+        </router-link>
       </ul>
     </div>
   </div>
@@ -63,17 +96,17 @@ ul li {
   /* max-width: 600px; */
   line-height: 24px;
 }
-ul li a,
-ul li a:active {
+.news-item,
+.news-item:active {
   padding: 5px;
   color: #3c3c3c;
   text-decoration: none;
   display: block;
 }
-ul li a:hover {
+.news-item:hover {
   color: #4834d4;
 }
-ul li a span {
+.news-item span {
   float: right;
 }
 

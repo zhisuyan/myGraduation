@@ -1,6 +1,6 @@
 <script setup>
-import ContentPage from '../components/ContentPage.vue';
-import NewsList from '../components/NewsList.vue';
+import ContentPage from '../../components/ContentPage.vue';
+import NewsList from '../../components/NewsList.vue';
 </script>
 
 <template>

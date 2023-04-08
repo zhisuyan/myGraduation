@@ -2,13 +2,30 @@
 import { ref, watch, onMounted } from 'vue';
 import 'animate.css';
 import NavScreenRouter from './NavScreenRouter.vue';
+import UserLoginCard from './UserLoginCard.vue';
+import { useUserStore } from '../stores/user';
+import { storeToRefs } from 'pinia';
+import { useRouter } from 'vue-router';
 
+const router = useRouter();
+const userStore = useUserStore();
+const { id, username, email, points } = storeToRefs(userStore);
 const activeIndex = ref('1');
 const handleSelect = (key, keyPath) => {
   console.log(key, keyPath);
 };
 // 遮罩层是否出现
 const open = ref(false);
+
+// 退出登录
+function logOut() {
+  sessionStorage.removeItem('userToken');
+  (id.value = ''),
+    (username.value = ''),
+    (email.value = ''),
+    (points.value = 0);
+  router.replace({ path: '/' });
+}
 
 // 窗口大小监听
 const screenWidth = ref(
@@ -38,12 +55,13 @@ watch(screenWidth, val => {
 
 <template>
   <el-menu
-    :default-active="activeIndex"
+    default-active="1"
     class="el-menu-demo"
     mode="horizontal"
     text-color="#686de0"
     active-text-color="#4834d4"
     :ellipsis="false"
+    :router="true"
     @select="handleSelect">
     <!-- Menu  -->
     <transition
@@ -54,11 +72,11 @@ watch(screenWidth, val => {
       <button
         v-if="!open"
         @click="open = true"
-        index="3"
+        index=""
         class="iconfont icon-menu hidden-sm-and-up el-menu-item"></button>
       <button
         v-else-if="open"
-        index="4"
+        index=""
         class="iconfont icon-guanbi el-menu-item hidden-sm-and-up"
         @click="open = false"></button>
     </transition>
@@ -83,41 +101,45 @@ watch(screenWidth, val => {
     </Teleport>
 
     <!-- module1 -->
-    <el-menu-item index="1" style="font-size: 16.6px"
-      ><router-link to="/">首页</router-link></el-menu-item
-    >
+    <el-menu-item index="/" style="font-size: 16.6px">首页</el-menu-item>
     <div class="flex-grow" />
 
     <!-- module2 -->
-    <el-sub-menu index="2" class="hidden-xs-only">
+    <el-sub-menu index="" class="hidden-xs-only">
       <template #title>法律法规</template>
-      <el-menu-item index="2-1"
-        ><router-link to="/ArticleList">item one</router-link></el-menu-item
+      <el-menu-item index="/ArticleList/law/10/1">
+        GDPR-通用数据保护条例
+      </el-menu-item>
+      <el-menu-item index="/ArticleList/law/10/2"
+        >网络安全与数据安全</el-menu-item
       >
-      <el-menu-item index="2-2">item two</el-menu-item>
-      <el-menu-item index="2-3">item three</el-menu-item>
+      <el-menu-item index="/ArticleList/law/10/3"> 信息安全管理 </el-menu-item>
     </el-sub-menu>
 
     <!-- module3 -->
-    <el-sub-menu index="3" class="hidden-xs-only">
-      <template #title>软件相关</template>
-      <el-menu-item index="3-1">item one</el-menu-item>
-      <el-menu-item index="3-2">item two</el-menu-item>
-      <el-menu-item index="3-3">item three</el-menu-item>
-    </el-sub-menu>
+
+    <el-menu-item index="/ArticleList/software/10/0" class="hidden-xs-only">
+      软件相关
+    </el-menu-item>
 
     <!-- module4 -->
-    <el-sub-menu index="4" class="hidden-xs-only">
-      <template #title>硬件相关</template>
-      <el-menu-item index="4-1">item one</el-menu-item>
-      <el-menu-item index="4-2">item two</el-menu-item>
-      <el-menu-item index="4-3">item three</el-menu-item>
-    </el-sub-menu>
+    <el-menu-item index="/ArticleList/hardware/10/0" class="hidden-xs-only">
+      硬件相关
+    </el-menu-item>
 
     <!-- module5 -->
-    <el-menu-item index="5" class="hidden-xs-only"
-      ><a href="#">新手指南</a></el-menu-item
-    >
+    <el-menu-item index="/ArticleList/guidance/10/0" class="hidden-xs-only">
+      <a href="#">新手指南</a>
+    </el-menu-item>
+
+    <el-sub-menu index="6" v-if="username">
+      <template #title>{{ username }}</template>
+      <el-menu-item index="/center">个人空间</el-menu-item>
+      <el-menu-item index="" class="logout" @click="logOut"
+        >退出登录</el-menu-item
+      >
+    </el-sub-menu>
+    <UserLoginCard v-else-if="!username" />
   </el-menu>
 </template>
 
@@ -128,11 +150,12 @@ watch(screenWidth, val => {
 .el-menu {
   z-index: 1000;
 }
-
 .icon-menu {
   background-color: #fff;
 }
-
+.logout {
+  color: #f56c6c !important;
+}
 /* 模态框 */
 .modal {
   position: fixed;

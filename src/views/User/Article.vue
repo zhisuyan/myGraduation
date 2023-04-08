@@ -1,10 +1,13 @@
 <script setup>
-import Text from '../components/Text.vue';
+import Text from '../../components/Text.vue';
+import { useRoute } from 'vue-router';
+const route = useRoute();
+const articleId = route.params.Id;
 </script>
 
 <template>
   <div class="container-article">
-    <Text />
+    <Text :Id="articleId" />
   </div>
 </template>
 

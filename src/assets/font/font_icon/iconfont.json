@@ -6,6 +6,27 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "249349",
+      "name": "LOCK",
+      "font_class": "lock",
+      "unicode": "e69e",
+      "unicode_decimal": 59038
+    },
+    {
+      "icon_id": "924528",
+      "name": "skull",
+      "font_class": "skull",
+      "unicode": "e94a",
+      "unicode_decimal": 59722
+    },
+    {
+      "icon_id": "1467328",
+      "name": "dollar",
+      "font_class": "dollar",
+      "unicode": "e688",
+      "unicode_decimal": 59016
+    },
+    {
       "icon_id": "658025",
       "name": "关闭",
       "font_class": "guanbi",

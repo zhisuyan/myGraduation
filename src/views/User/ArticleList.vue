@@ -1,10 +1,15 @@
 <script setup>
-import Lists from '../components/Lists.vue';
+import Lists from '../../components/Lists.vue';
+import { useRoute } from 'vue-router';
+const route = useRoute();
 </script>
 
 <template>
   <div class="bg-color-shallow">
-    <Lists v-show="$route.meta.showIndex" />
+    <Lists
+      v-show="$route.meta.showIndex"
+      :route="route"
+      :key="new Date().getTime()" />
     <router-view></router-view>
   </div>
 </template>
@@ -14,7 +19,7 @@ import Lists from '../components/Lists.vue';
 .bg-color-shallow {
   background-color: #686de0;
   /* 数据填充后,删除此高度!!! */
-  height: 900px;
+  min-height: 800px;
   padding-top: 40px;
   padding-bottom: 80px;
 }

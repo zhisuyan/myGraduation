@@ -24,6 +24,13 @@ body {
   /* background-color: #686de0; */
   letter-spacing: 0.2px;
 }
+.text p,
+.text li {
+  line-height: 30px;
+}
+.text p img {
+  width: 55%;
+}
 
 /* element-plus */
 .is-focus {
@@ -31,4 +38,27 @@ body {
 }
 .el-menu {
   border-bottom: 0px !important;
+}
+.el-pagination {
+  width: 50%;
+  transform: translateX(80px);
+}
+.pagination li.is-active {
+  background-color: #686de0 !important;
+}
+.pagination li.number:hover {
+  color: #686de0;
+}
+html,
+body,
+#app,
+.common-layout,
+.aside,
+.el-container,
+.el-menu {
+  height: 100%;
+}
+.el-menu--collapse .el-menu .el-submenu,
+.el-menu--popup {
+  min-width: 120px !important;
 }

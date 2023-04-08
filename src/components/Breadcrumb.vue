@@ -4,7 +4,6 @@ import { useRouter } from 'vue-router';
 import { ArrowRight } from '@element-plus/icons-vue';
 
 const router = useRouter();
-console.log(router.currentRoute.value.matched);
 const routers = computed(() => {
   // 过滤掉没有meta的
   return router.currentRoute.value.matched.filter(item => item.meta.title);
