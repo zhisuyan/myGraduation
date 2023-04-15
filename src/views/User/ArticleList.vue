@@ -1,7 +1,8 @@
 <script setup>
 import Lists from '../../components/Lists.vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 const route = useRoute();
+const router = useRouter();
 </script>
 
 <template>
@@ -10,7 +11,7 @@ const route = useRoute();
       v-show="$route.meta.showIndex"
       :route="route"
       :key="new Date().getTime()" />
-    <router-view></router-view>
+    <router-view :key="route.fullPath"></router-view>
   </div>
 </template>
 

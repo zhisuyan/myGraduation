@@ -30,10 +30,12 @@ const Module4 = ref(false);
       <router-link to="/ArticleList/law/10/2" @click="open = false"
         ><div class="item">网络安全与数据安全</div></router-link
       >
-
       <router-link to="/ArticleList/law/10/3" @click="open = false"
         ><div class="item">信息安全管理</div></router-link
       >
+      <router-link to="/ArticleList/law/10/4" @click="open = false">
+        <div class="item">行业标准</div>
+      </router-link>
     </div>
   </div>
 

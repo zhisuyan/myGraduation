@@ -3,6 +3,7 @@ import { User, Lock, Message } from '@element-plus/icons-vue';
 import { ref, reactive } from 'vue';
 import { ElMessage } from 'element-plus';
 import { createAxiosByinterceptors } from '../utils/net';
+import code from '../utils/verificationCode';
 import { useUserStore } from '../stores/user';
 import { storeToRefs } from 'pinia';
 import { useRouter } from 'vue-router';
@@ -19,7 +20,23 @@ const isLogin = ref(true);
 const form = reactive({
   username: '',
   password: '',
+  code: '',
 });
+
+// 验证验证码
+let codeTxt = ref('');
+
+function getCode() {
+  codeTxt.value = code(options);
+  console.log(codeTxt.value);
+}
+function confirmCode(rule, value, callback) {
+  if (value !== codeTxt.value) {
+    callback(new Error('验证码不正确!'));
+  } else {
+    callback();
+  }
+}
 
 const rules = reactive({
   username: [
@@ -30,7 +47,19 @@ const rules = reactive({
     { required: true, message: '请输入密码', trigger: 'blur' },
     { min: 6, max: 18, message: '长度应为6~14', trigger: 'blur' },
   ],
+  code: [
+    { required: true, message: '请输入验证码', trigger: 'blur' },
+    { validator: confirmCode, trigger: ['input'] },
+  ],
 });
+
+// 验证码
+let options = {
+  canvasId: 'mycanvas',
+  width: 150,
+  height: 40,
+  txt: '',
+};
 
 // 注册表单
 const regForm = reactive({
@@ -190,7 +219,6 @@ function submitForm(formRef) {
     if (isPass) {
       postLogin();
     } else {
-      errMsg();
     }
   });
 }
@@ -209,7 +237,14 @@ function submitReg(formRef) {
 
 <template>
   <div @click="cardOpen = false">
-    <div class="login" @click.stop="cardOpen = true">登录</div>
+    <div
+      class="login"
+      @click.stop="
+        cardOpen = true;
+        getCode();
+      ">
+      登录
+    </div>
 
     <!-- 模态 -->
     <div class="modal" v-show="cardOpen">
@@ -244,6 +279,22 @@ function submitReg(formRef) {
                 :prefix-icon="Lock"
                 class="input-password" />
             </el-form-item>
+
+            <!-- 验证码 -->
+            <el-form-item prop="code">
+              <canvas
+                id="mycanvas"
+                title="这张看不清,换一张"
+                @click="getCode"></canvas
+              ><br /><br />
+              <el-input
+                v-model="form.code"
+                placeholder="验证码"
+                size="large"
+                clearable
+                class="input-code" />
+            </el-form-item>
+
             <span class="toReg" @click="isLogin = false">没有账号?</span>
           </el-form>
         </div>
@@ -365,7 +416,7 @@ function submitReg(formRef) {
   border: 1px solid #888;
   width: 23%;
   min-width: 350px;
-  height: 400px;
+  height: 450px;
 }
 .reg-form {
   height: 520px;
@@ -385,6 +436,14 @@ function submitReg(formRef) {
 }
 .input-password {
   margin-top: 10px;
+}
+#mycanvas {
+  cursor: pointer;
+}
+.input-code {
+  display: inline-block;
+  width: 120px;
+  margin-left: 30px;
 }
 .login-btn-container {
   margin-top: 60px;

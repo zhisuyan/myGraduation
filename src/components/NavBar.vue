@@ -117,6 +117,7 @@ watch(screenWidth, val => {
         >网络安全与数据安全</el-menu-item
       >
       <el-menu-item index="/ArticleList/law/10/3"> 信息安全管理 </el-menu-item>
+      <el-menu-item index="/ArticleList/law/10/4"> 行业标准</el-menu-item>
     </el-sub-menu>
 
     <!-- module3 -->

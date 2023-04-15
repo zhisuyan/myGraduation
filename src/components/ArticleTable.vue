@@ -38,15 +38,19 @@ const classOptions = [
     children: [
       {
         value: 1,
-        label: 1,
+        label: 'GDPR-通用数据保护条例',
       },
       {
         value: 2,
-        label: 2,
+        label: '网络安全与数据安全',
       },
       {
         value: 3,
-        label: 3,
+        label: '信息安全管理',
+      },
+      {
+        value: 4,
+        label: '行业标准',
       },
     ],
   },
@@ -89,6 +93,7 @@ function getTableData() {
     .then(response => {
       apiData.value = response.data.data;
       totalCount.value = response.data.dataCount;
+      console.log(apiData.value);
       // 认证过期 跳转重新登陆
       const status = response.data.status;
       if (status === 401) {
@@ -122,6 +127,32 @@ function formatClass(row) {
       return '新手引导';
     default:
       return '未格式该类别';
+  }
+}
+
+function formatIsfree(row) {
+  switch (row.Isfree) {
+    case 0:
+      return '付费资源';
+    case 1:
+      return '免费资源';
+    default:
+      return '未格式该类别';
+  }
+}
+
+function formatSubclass(row) {
+  switch ((row.Class, row.SubClass)) {
+    case ('law', 1):
+      return 'GDPR-通用数据保护条例';
+    case ('law', 2):
+      return '网络安全与数据安全';
+    case ('law', 3):
+      return '信息安全管理';
+    case ('law', 4):
+      return '行业标准';
+    default:
+      return '无';
   }
 }
 
@@ -233,6 +264,33 @@ function changeClass() {
   }
 }
 
+// 更改资源类别
+// 是否启用
+function changeIsfree(index, row) {
+  request
+    .post(`/admin/changeIsfree/${row.Id}`)
+    .then(response => {
+      if (response.data.status === 401) {
+        ElMessage({
+          showClose: true,
+          message: '身份认证已过期,请重新登陆',
+          type: 'warning',
+          duration: 2000,
+          offset: 450,
+        });
+        form.Value = [];
+        setTimeout(() => {
+          router.push({ path: '/login' });
+        }, 1000);
+      } else {
+        getTableData();
+      }
+    })
+    .catch(error => {
+      console.log(error);
+    });
+}
+
 // 转义斜杠
 function escapeSlash(str) {
   const regex = /\//g;
@@ -242,7 +300,8 @@ function escapeSlash(str) {
 // 上传文章
 function uploadArticle() {
   uploadFormVisible.value = false;
-  if (form.Value[1] == undefined) {
+
+  if (uploadForm.Class[1] === undefined) {
     request
       .post(
         `/admin/upload/${uploadForm.Title}/${escapeSlash(uploadForm.Address)}/${
@@ -308,7 +367,6 @@ function uploadArticle() {
           uploadForm.Title = '';
           uploadForm.Address = '';
           uploadForm.Class = [];
-          console.log(response);
         }
       })
       .catch(error => {
@@ -396,34 +454,43 @@ getTableData();
     highlight-current-row
     @current-change="handleCurrentChange"
     class="data-table">
-    <el-table-column prop="Id" label="id" width="150" align="center" sortable />
-    <el-table-column prop="Title" label="文章标题" width="550" align="center" />
+    <el-table-column prop="Id" label="id" width="100" align="center" sortable />
+    <el-table-column prop="Title" label="文章标题" align="center" />
     <el-table-column
       prop="Class"
       label="分类"
+      width="100"
       align="center"
       :formatter="formatClass"
       :filters="[
         { text: '法律法规', value: 'law' },
         { text: '软件相关', value: 'software' },
         { text: '硬件相关', value: 'hardware' },
-        { text: '新手引导', value: '新手引导' },
+        { text: '新手引导', value: 'guidance' },
       ]"
       :filter-method="filterHandler" />
     <el-table-column
       prop="SubClass"
       label="子类别"
-      width="150"
+      width="200"
       align="center"
+      :formatter="formatSubclass"
       sortable />
     <el-table-column
       prop="Time"
       label="更新时间"
       align="center"
-      width="300"
+      width="250"
       :formatter="formatTime"
       sortable />
-    <el-table-column fixed="right" label="操作" width="180" align="center">
+    <el-table-column
+      prop="Isfree"
+      label="付费资源"
+      width="150"
+      align="center"
+      :formatter="formatIsfree"
+      sortable />
+    <el-table-column fixed="right" label="操作" width="250" align="center">
       <template #default="scope">
         <el-button
           link
@@ -438,6 +505,13 @@ getTableData();
           size="small"
           @click="(dialogFormVisible = true), (currentRow = scope.row)">
           更改分类
+        </el-button>
+        <el-button
+          link
+          type="warning"
+          size="small"
+          @click="changeIsfree(scope.$index, scope.row)">
+          更改资源类别
         </el-button>
       </template>
     </el-table-column>

@@ -14,6 +14,10 @@
       <router-link to="/ArticleList/law/10/3"
         ><dd class="item">信息安全管理</dd></router-link
       >
+
+      <router-link to="/ArticleList/law/10/4"
+        ><dd class="item">行业标准</dd></router-link
+      >
     </dl>
     <dl class="itemList">
       <router-link to="/ArticleList/software/10/0"
