@@ -171,10 +171,11 @@ function downloadFileFree() {
 async function action() {
   if (isfree.value) {
     await getArticleData();
-    checkLogin();
     count();
   } else {
     await getArticleData();
+    checkLogin();
+
     count();
   }
 }
