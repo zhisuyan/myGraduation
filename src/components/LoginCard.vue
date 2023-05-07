@@ -102,6 +102,7 @@ function postLogin() {
     })
     .catch(error => {
       console.log(error);
+      errMsg();
     });
 }
 

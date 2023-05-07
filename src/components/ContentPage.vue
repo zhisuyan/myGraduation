@@ -20,6 +20,7 @@ function formatTime(time) {
   return dayjs(time).format('YYYY-MM-DD HH:mm:ss');
 }
 
+// 测试用户是否是登录用户，若是则会拉取用户数据
 function testToken() {
   return request
     .get(`/userCtrl/testToken`)
@@ -36,6 +37,7 @@ function testToken() {
     });
 }
 
+// 统计访客流量
 async function count() {
   await testToken();
   if (!username.value) {
@@ -51,6 +53,7 @@ async function count() {
     });
 }
 
+// 搜索功能
 function getArticleData() {
   return request
     .get(`/user/search/${input.value}`)

@@ -212,7 +212,7 @@ function resetPwd() {
     });
 }
 
-// 添加管理员
+// 添加用户
 function addUser() {
   request
     .post(
