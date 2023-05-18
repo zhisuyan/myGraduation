@@ -1,7 +1,7 @@
 <script setup>
 import { ref, reactive } from 'vue';
 import { createAxiosByinterceptors } from '../utils/net';
-import { ElMessage, ElMessageBox } from 'element-plus';
+import { ElMessage, ElMessageBox, genFileId } from 'element-plus';
 import { useRouter } from 'vue-router';
 import dayjs from 'dayjs';
 
@@ -18,7 +18,6 @@ let form = reactive({
 let uploadForm = reactive({
   Class: [],
   Title: '',
-  Address: '',
 });
 
 const rules = reactive({
@@ -26,9 +25,33 @@ const rules = reactive({
     { required: true, message: '请输入文章标题', trigger: 'blur' },
     { min: 4, max: 30, message: '标题长度应为4~30', trigger: 'blur' },
   ],
-  Address: [{ required: true, message: '请输入路径', trigger: 'blur' }],
   Class: [{ required: true, message: '请选择文章类别', trigger: 'blur' }],
 });
+
+// 文件上传
+const upload = ref();
+let headers = ref({});
+let token = window.sessionStorage.getItem('adminToken');
+headers.value.Authorization = JSON.parse(token);
+const handleExceed = files => {
+  upload.value.clearFiles();
+  const file = files[0];
+  file.uid = genFileId();
+  upload.value.handleStart(file);
+};
+
+function handleError(err) {
+  console.log(err, 'Err');
+}
+
+let Address;
+function handleSuccess(res) {
+  Address = res.src;
+  console.log(Address);
+}
+function submitUpload() {
+  upload.value.submit();
+}
 
 // 级联选择器
 const classOptions = [
@@ -93,7 +116,6 @@ function getTableData() {
     .then(response => {
       apiData.value = response.data.data;
       totalCount.value = response.data.dataCount;
-      console.log(apiData.value);
       // 认证过期 跳转重新登陆
       const status = response.data.status;
       if (status === 401) {
@@ -298,13 +320,13 @@ function escapeSlash(str) {
 }
 
 // 上传文章
-function uploadArticle() {
+async function uploadArticle() {
   uploadFormVisible.value = false;
 
   if (uploadForm.Class[1] === undefined) {
     request
       .post(
-        `/admin/upload/${uploadForm.Title}/${escapeSlash(uploadForm.Address)}/${
+        `/admin/upload/${uploadForm.Title}/${escapeSlash(Address)}/${
           uploadForm.Class[0]
         }`
       )
@@ -329,8 +351,8 @@ function uploadArticle() {
           });
           getTableData();
           uploadForm.Title = '';
-          uploadForm.Address = '';
           uploadForm.Class = [];
+          upload.value.clearFiles();
           console.log(response);
         }
       })
@@ -340,7 +362,7 @@ function uploadArticle() {
   } else {
     request
       .post(
-        `/admin/upload/${uploadForm.Title}/${escapeSlash(uploadForm.Address)}/${
+        `/admin/upload/${uploadForm.Title}/${escapeSlash(Address)}/${
           uploadForm.Class[0]
         }/${uploadForm.Class[1]}`
       )
@@ -365,8 +387,8 @@ function uploadArticle() {
           });
           getTableData();
           uploadForm.Title = '';
-          uploadForm.Address = '';
           uploadForm.Class = [];
+          upload.value.clearFiles();
         }
       })
       .catch(error => {
@@ -408,12 +430,23 @@ getTableData();
           v-model="uploadForm.Class" />
       </el-form-item>
 
-      <el-form-item label="路径" :label-width="formLabelWidth" prop="Address">
-        <el-input
-          v-model="uploadForm.Address"
-          placeholder="例如:law/1/001_英文版.docx"
-          clearable />
+      <el-form-item label="文件上传" :label-width="formLabelWidth">
       </el-form-item>
+      <el-upload
+        ref="upload"
+        class="upload-demo"
+        action="http://localhost:3000/admin/uploadFile"
+        accept=".doc .docx"
+        :headers="headers"
+        :limit="1"
+        :on-exceed="handleExceed"
+        :on-error="handleError"
+        :on-success="handleSuccess"
+        :auto-upload="true">
+        <template #trigger>
+          <el-button type="primary">select file</el-button>
+        </template>
+      </el-upload>
     </el-form>
 
     <!-- 确认/取消 -->

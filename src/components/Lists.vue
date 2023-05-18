@@ -30,7 +30,10 @@ function testToken() {
       }
     })
     .catch(error => {
-      console.log(error);
+      (id.value = ''),
+        (username.value = ''),
+        (email.value = ''),
+        (points.value = 0);
     });
 }
 // 网络请求

@@ -1,23 +1,31 @@
 <script setup>
 import { ref } from 'vue';
-import { Search } from '@element-plus/icons-vue';
 import { createAxiosByinterceptors } from '../utils/net';
 import { useUserStore } from '../stores/user';
 import { storeToRefs } from 'pinia';
 import dayjs from 'dayjs';
 
-const input = ref('');
 const userStore = useUserStore();
 const { id, username, email, points } = storeToRefs(userStore);
-let searchListOpen = ref(true);
-let apiData = ref('');
+
+let latestNews = ref('');
+let first15 = ref([]);
+let last15 = ref([]);
 let isUser = ref(0);
 
 const request = createAxiosByinterceptors({});
 
-// UTC格式化
-function formatTime(time) {
-  return dayjs(time).format('YYYY-MM-DD HH:mm:ss');
+function getLatest() {
+  return request
+    .get(`/user/getLatest`)
+    .then(response => {
+      latestNews.value = response.data.data;
+      first15.value = latestNews.value.slice(0, 15);
+      last15.value = latestNews.value.slice(15);
+    })
+    .catch(error => {
+      console.log(error);
+    });
 }
 
 // 测试用户是否是登录用户，若是则会拉取用户数据
@@ -47,27 +55,12 @@ async function count() {
   }
   return request
     .get(`/user/count/0/${isUser.value}/${id.value}`)
-    .then(response => console.log(response))
+    .then(response => response)
     .catch(error => {
       console.log(error);
     });
 }
-
-// 搜索功能
-function getArticleData() {
-  return request
-    .get(`/user/search/${input.value}`)
-    .then(response => {
-      apiData.value = response.data.data;
-      searchListOpen.value = true;
-    })
-    .catch(error => {
-      console.log(error);
-    });
-}
-function hiddenList() {
-  searchListOpen.value = false;
-}
+getLatest();
 count();
 </script>
 
@@ -80,57 +73,66 @@ count();
       <p class="title">软硬件信息安全资讯综合平台</p>
     </h1>
 
-    <!-- 搜索框 -->
-    <div class="search">
-      <el-input
-        v-model="input"
-        placeholder="站内搜索"
-        :clearable="true"
-        @input="hiddenList"
-        @keyup.enter="getArticleData"
-        size="large">
-        <template #append>
-          <el-icon color="#4834d4 " @click.enter="getArticleData">
-            <el-button :icon="Search" />
-          </el-icon>
-        </template>
-      </el-input>
-      <div class="search-list" v-show="searchListOpen">
-        <ul>
-          <router-link
-            v-for="data in apiData"
-            :to="'/ArticleList/Article/' + data.Id"
-            :key="data.Id">
-            <li class="item">
-              <span class="list-title">{{ data.Title }}</span>
-              <div style="flex-grow: 1"></div>
-              <span class="date">{{ formatTime(data.Time) }}</span>
-            </li></router-link
-          >
-        </ul>
+    <!-- 新闻栏 -->
+    <div class="news">
+      <div>
+        <span class="type">最新资讯</span>
+      </div>
+      <div class="lists">
+        <div class="list">
+          <ul class="list-left">
+            <router-link
+              v-for="data in first15"
+              :to="'/ArticleList/Article/' + data.Id"
+              :key="data.Id">
+              <li>
+                <span class="news-title">{{ data.Title }}</span>
+              </li>
+            </router-link>
+          </ul>
+        </div>
+        <div class="list">
+          <ul class="list-right">
+            <router-link
+              v-for="data in last15"
+              :to="'/ArticleList/Article/' + data.Id"
+              :key="data.Id">
+              <li>
+                <span>{{ data.Title }}</span>
+              </li>
+            </router-link>
+          </ul>
+        </div>
       </div>
     </div>
 
     <!-- 按钮 -->
-    <router-link to="/ArticleList/Article/58"
-      ><button type="button" class="start" @click="shut">
-        快速上手
-      </button></router-link
-    >
+    <router-link to="/ArticleList/Article/58">
+      <button type="button" class="start" @click="shut">快速上手</button>
+    </router-link>
   </section>
 </template>
 
 <style scoped>
 .hero {
   max-width: 1440px;
-  /* background-color: skyblue; */
   padding: 96px 32px;
   box-sizing: border-box;
+  padding-bottom: 0px;
 }
 
 @media screen and (max-width: 960px) {
   .tagline {
     font-size: 64px !important;
+  }
+  .lists {
+    flex-direction: column;
+  }
+  .list-left a:nth-child(odd) {
+    color: #fda085;
+  }
+  .list-right a:nth-child(even) {
+    color: #fda085;
   }
 }
 
@@ -145,6 +147,7 @@ count();
     font-size: 36px !important;
   }
 }
+
 /* 标题栏 */
 .tagline {
   font-size: 76px;
@@ -159,7 +162,40 @@ count();
   padding-top: 30px;
   color: #3c3c3c;
 }
+/* 新闻栏 */
+.news {
+  margin: 0 auto;
+  margin-top: 40px;
+  background-color: #fff;
+  max-width: 1100px;
+  border-radius: 8px;
+  box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.2);
+  padding: 20px;
+}
+.type {
+  color: #ff2b7d;
+  font-size: 20px;
+}
+.lists {
+  padding-top: 20px;
+  display: flex;
+}
+.list {
+  flex: 1;
+  flex-basis: auto;
+  line-height: 26px;
+  font-size: 16px;
+  min-width: 0;
 
+  white-space: normal;
+  /* 文本溢出显示省略号 */
+  text-overflow: ellipsis;
+  /* 溢出部分隐藏 */
+  overflow: hidden;
+}
+.list li:hover {
+  color: #4834d4;
+}
 /* 搜索框 */
 .search {
   max-width: 50%;

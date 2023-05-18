@@ -51,13 +51,11 @@
         ><dd class="item">新手入门篇3_硬件</dd></router-link
       >
     </dl>
-    <!-- <dl class="itemList">
-      <dt class="item">最新资讯</dt>
-      <dd class="item">xxxxx</dd>
-      <dd class="item">xxxxx</dd>
-      <dd class="item">xxxxx</dd>
-    </dl> -->
+
     <div class="block"></div>
+  </div>
+  <div class="beian">
+    <a href="https://beian.miit.gov.cn" class="item">粤ICP备2023053504号-1</a>
   </div>
 </template>
 
@@ -88,5 +86,8 @@ a:hover {
 }
 .block {
   flex-basis: 50%;
+}
+.beian {
+  padding: 10px 0;
 }
 </style>

@@ -100,16 +100,16 @@ watch(screenWidth, val => {
         </div>
       </transition>
     </Teleport>
+    <div class="flex-grow" />
 
     <!-- module1 -->
-    <el-menu-item index="/" style="font-size: 16.6px" @click="open = false"
+    <el-menu-item index="/" @click="open = false" class="font-color"
       >首页</el-menu-item
     >
-    <div class="flex-grow" />
 
     <!-- module2 -->
     <el-sub-menu index="" class="hidden-xs-only">
-      <template #title>法律法规</template>
+      <template #title> <div class="font-color">法律法规</div></template>
       <el-menu-item index="/ArticleList/law/10/1">
         GDPR-通用数据保护条例
       </el-menu-item>
@@ -122,17 +122,23 @@ watch(screenWidth, val => {
 
     <!-- module3 -->
 
-    <el-menu-item index="/ArticleList/software/10/0" class="hidden-xs-only">
+    <el-menu-item
+      index="/ArticleList/software/10/0"
+      class="hidden-xs-only font-color">
       软件相关
     </el-menu-item>
 
     <!-- module4 -->
-    <el-menu-item index="/ArticleList/hardware/10/0" class="hidden-xs-only">
+    <el-menu-item
+      index="/ArticleList/hardware/10/0"
+      class="hidden-xs-only font-color">
       硬件相关
     </el-menu-item>
 
     <!-- module5 -->
-    <el-menu-item index="/ArticleList/guidance/10/0" class="hidden-xs-only">
+    <el-menu-item
+      index="/ArticleList/guidance/10/0"
+      class="hidden-xs-only font-color">
       <a href="#">新手指南</a>
     </el-menu-item>
 
@@ -158,6 +164,9 @@ watch(screenWidth, val => {
 }
 .icon-menu {
   background-color: #fff;
+}
+.font-color {
+  color: #4834d4;
 }
 .logout {
   color: #f56c6c !important;

@@ -35,7 +35,6 @@ import Breadcrumb from '../../components/Breadcrumb.vue';
   margin: 0 auto;
   max-width: 1440px;
 }
-
 /* 导航栏 */
 nav {
   background-color: #fff;
